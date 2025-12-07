@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Cinemachine.unity
     guid: ca6f5456e7a0be746a5462904b99ac85
+  - enabled: 1
+    path: Assets/Scenes/ExitScene.unity
+    guid: 5c9209716c07bdc4c9f18c56028db815
   m_configObjects: {}
