@@ -6,7 +6,7 @@ public class ExitTrigger : MonoBehaviour
     private bool playerInside = false;
     private ItemCollector collector;
 
-    public string escapeSceneName = "EscapeScene"; // 이동할 씬 이름
+    public string escapeSceneName = "ExitScene"; // 이동할 씬 이름
 
     void Start()
     {
