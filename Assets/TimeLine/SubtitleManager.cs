@@ -1,52 +1,44 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections.Generic;
-using TMPro; // TextMeshPro¸¦ »ç¿ëÇÏ·Á¸é ÀÌ ÁÙÀÌ ÇÊ¼öÀÔ´Ï´Ù!
+using TMPro;
+using UnityEngine.Playables; // PlayableDirectorë¥¼ ì‚¬ìš©í•˜ë ¤ë©´ í•„ìˆ˜!
 
 public class SubtitleManager : MonoBehaviour
 {
-    [Header("¿¬°áÇÒ ÄÄÆ÷³ÍÆ®")]
-    public AudioSource audioSource;         // AI À½¼º ¿Àµğ¿À ¼Ò½º
-    public TextMeshProUGUI subtitleDisplay; // ÀÚ¸·À» Ç¥½ÃÇÒ Text (TMPro)
+    [Header("ì—°ê²°í•  ì»´í¬ë„ŒíŠ¸")]
+    // ê¸°ì¡´ AudioSource ëŒ€ì‹  ë˜ëŠ” í•¨ê»˜ ì‚¬ìš©
+    public PlayableDirector playableDirector; // Timelineì„ ì¬ìƒí•˜ëŠ” ë””ë ‰í„°
+    public TextMeshProUGUI subtitleDisplay;
 
-    [Header("ÀÚ¸· µ¥ÀÌÅÍ")]
-    public List<SubtitleClip> subtitleClips; // ÀÚ¸· Å¬¸³ ¸®½ºÆ®
-
-    void Start()
-    {
-        if (subtitleDisplay != null)
-        {
-            subtitleDisplay.text = ""; // ½ÃÀÛÇÒ ¶§ ÅØ½ºÆ® ºñ¿ì±â
-        }
-    }
+    [Header("ìë§‰ ë°ì´í„°")]
+    public List<SubtitleClip> subtitleClips; // ìë§‰ í´ë¦½ ë¦¬ìŠ¤íŠ¸
 
     void Update()
     {
-        // ¿Àµğ¿À³ª ÀÚ¸·Ã¢ÀÌ ¾øÀ¸¸é ½ÇÇà ÁßÁö
-        if (audioSource == null || subtitleDisplay == null) return;
+        // Timeline Directorê°€ ì—†ìœ¼ë©´ ì‹¤í–‰ ì¤‘ì§€
+        if (playableDirector == null || subtitleDisplay == null) return;
 
-        // ¿Àµğ¿À°¡ Àç»ı ÁßÀÌ ¾Æ´Ï¸é ÅØ½ºÆ® ºñ¿ì±â
-        if (!audioSource.isPlaying)
+        // Timelineì´ ì¬ìƒ ì¤‘ì´ ì•„ë‹ˆë©´ í…ìŠ¤íŠ¸ ë¹„ìš°ê¸°
+        if (playableDirector.state != PlayState.Playing)
         {
             subtitleDisplay.text = "";
             return;
         }
 
-        // ÇöÀç ¿Àµğ¿À Àç»ı ½Ã°£
-        float currentTime = audioSource.time;
-        string textToShow = ""; // ÀÌ¹ø ÇÁ·¹ÀÓ¿¡ Ç¥½ÃÇÒ ÅØ½ºÆ®
+        // ğŸŸ¢ í•µì‹¬ ë³€ê²½: Timelineì˜ í˜„ì¬ ì‹œê°„ ì‚¬ìš©
+        float currentTime = (float)playableDirector.time;
+        string textToShow = "";
 
-        // ¸ğµç ÀÚ¸· Å¬¸³À» È®ÀÎ
+        // ëª¨ë“  ìë§‰ í´ë¦½ì„ í™•ì¸ (ì´í›„ ì½”ë“œëŠ” ë™ì¼)
         foreach (var clip in subtitleClips)
         {
-            // ÇöÀç ½Ã°£ÀÌ ÀÌ Å¬¸³ÀÇ ½ÃÀÛ°ú ³¡ ½Ã°£ »çÀÌ¿¡ ÀÖ´ÂÁö È®ÀÎ
-            if (currentTime >= clip.startTime && currentTime <= clip.endTime)
+            if (currentTime >= clip.startTime && currentTime < clip.endTime)
             {
                 textToShow = clip.subtitleText;
-                break; // ¾Ë¸ÂÀº ÀÚ¸·À» Ã£¾ÒÀ¸¸é ·çÇÁ Á¾·á
+                break;
             }
         }
 
-        // Ã£Àº ÅØ½ºÆ®¸¦ UI¿¡ Ç¥½Ã
         subtitleDisplay.text = textToShow;
     }
 }

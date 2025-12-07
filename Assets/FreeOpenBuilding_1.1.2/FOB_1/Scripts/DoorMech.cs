@@ -1,40 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DoorMech : MonoBehaviour 
+public class DoorMech : MonoBehaviour
 {
+    [Header("Rotation Settings")]
+    public Vector3 OpenRotation, CloseRotation;
 
-	public Vector3 OpenRotation, CloseRotation;
+    [Header("Speed")]
+    public float rotSpeed = 1f;
 
-	public float rotSpeed = 1f;
+    [Header("State")]
+    private bool doorBool = false;
 
-	public bool doorBool;
+    void Update()
+    {
+        if (doorBool)
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(OpenRotation), rotSpeed * Time.deltaTime);
+        else
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(CloseRotation), rotSpeed * Time.deltaTime);
+    }
 
+    // ---------- Timeline 전용 함수 ----------
+    public void OpenDoor()
+    {
+        doorBool = true;
+    }
 
-	void Start()
-	{
-		doorBool = false;
-	}
-		
-	void OnTriggerStay(Collider col)
-	{
-		if(col.gameObject.tag == ("Player") && Input.GetKeyDown(KeyCode.E))
-		{
-			if (!doorBool)
-				doorBool = true;
-			else
-				doorBool = false;
-		}
-	}
+    public void CloseDoor()
+    {
+        doorBool = false;
+    }
 
-	void Update()
-	{
-		if (doorBool)
-			transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (OpenRotation), rotSpeed * Time.deltaTime);
-		else
-			transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (CloseRotation), rotSpeed * Time.deltaTime);	
-	}
-
+    public void ToggleDoor()
+    {
+        doorBool = !doorBool;
+    }
 }
-
